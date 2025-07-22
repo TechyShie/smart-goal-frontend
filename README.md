@@ -23,14 +23,6 @@ Smart Goal Planner is a simple React application that helps users **set**, **tra
 
 ---
 
-## ✨ Future Improvements
-
-- Add authentication (login/signup)  
-- Add filtering by goal category or completion status  
-- Add notifications/reminders for upcoming deadlines  
-- Persist data using a real backend or Firebase  
-
----
 
 ## 👩🏽‍💻 Author
 
