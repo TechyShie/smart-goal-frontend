@@ -1,9 +1,7 @@
-// App.jsx
 import React, { useEffect, useState } from "react";
 import GoalForm from "./components/GoalForm";
 import GoalCard from "./components/GoalCard";
 import './App.css';
-
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -12,37 +10,41 @@ function App() {
   const [editingGoal, setEditingGoal] = useState(null);
 
   useEffect(() => {
+    console.log("Fetching from:", API_URL); // Debugging line
     fetch(`${API_URL}/goals`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Failed to fetch: ${res.status}`);
+        }
+        return res.json();
+      })
       .then(setGoals)
-      .catch(console.error);
+      .catch((error) => {
+        console.error("Error fetching goals:", error);
+      });
   }, []);
 
   const addOrUpdateGoal = (goalData) => {
-    if (goalData.id) {
-      // UPDATE
-      fetch(`${API_URL}/goals/${goalData.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(goalData),
-      })
-        .then((res) => res.json())
-        .then((updated) => {
+    const url = goalData.id ? `${API_URL}/goals/${goalData.id}` : `${API_URL}/goals`;
+    const method = goalData.id ? "PUT" : "POST";
+    const body = JSON.stringify(goalData.id ? goalData : { ...goalData, savedAmount: 0 });
+
+    fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body,
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        if (goalData.id) {
           setGoals((prev) =>
-            prev.map((goal) => (goal.id === updated.id ? updated : goal))
+            prev.map((goal) => (goal.id === result.id ? result : goal))
           );
           setEditingGoal(null);
-        });
-    } else {
-      // CREATE
-      fetch(`${API_URL}/goals`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...goalData, savedAmount: 0 }),
-      })
-        .then((res) => res.json())
-        .then((newGoal) => setGoals((prev) => [...prev, newGoal]));
-    }
+        } else {
+          setGoals((prev) => [...prev, result]);
+        }
+      });
   };
 
   const handleDelete = (id) => {
