@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import GoalForm from "./components/GoalForm";
 import GoalsList from "./components/GoalsList";
 
+const BASE_URL = "https://smart-goals-backend-2.onrender.com";
+
 function App() {
   const [goals, setGoals] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/goals")
+    fetch(`${BASE_URL}/goals`)
       .then((res) => res.json())
       .then(setGoals);
   }, []);
@@ -16,7 +18,7 @@ function App() {
   };
 
   const handleDeleteGoal = (id) => {
-    fetch(`http://localhost:3000/goals/${id}`, {
+    fetch(`${BASE_URL}/goals/${id}`, {
       method: "DELETE",
     }).then(() => {
       setGoals((prevGoals) => prevGoals.filter((goal) => goal.id !== id));
@@ -36,7 +38,7 @@ function App() {
       savedAmount: Number(goal.savedAmount) + Number(amount),
     };
 
-    fetch(`http://localhost:3000/goals/${goalId}`, {
+    fetch(`${BASE_URL}/goals/${goalId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

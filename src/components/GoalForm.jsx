@@ -17,7 +17,7 @@ function GoalForm({ onAddGoal }) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    fetch("http://localhost:3000/goals", {
+    fetch("https://smart-goals-backend-2.onrender.com/goals", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),

@@ -13,7 +13,7 @@ function GoalCard({ goal, onDeleteGoal, onEditGoal, onDeposit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetch(`http://localhost:3000/goals/${goal.id}`, {
+    fetch(`https://smart-goals-backend-2.onrender.com/goals/${goal.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(editedGoal),
