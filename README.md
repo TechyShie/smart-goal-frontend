@@ -1,12 +1,43 @@
-# React + Vite
+# 💰 Smart Goal Planner
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Smart Goal Planner is a simple React application that helps users **set**, **track**, and **manage** their personal savings goals. Users can create financial goals, track their progress through deposits, and edit or delete goals as needed.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🧠 Features
 
-## Expanding the ESLint configuration
+- ✅ Create new savings goals with name, category, deadline, and target amount  
+- 💸 Add deposits toward your savings goals  
+- 📝 Edit or delete existing goals  
+- 📊 Track progress visually  
+- ⚡ Built with React and `json-server` (mock backend)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 📦 Technologies Used
+
+- **React**
+- **JavaScript (ES6+)**
+- **json-server** (for CRUD operations)
+- **CSS** (custom styles)
+
+---
+
+## ✨ Future Improvements
+
+- Add authentication (login/signup)  
+- Add filtering by goal category or completion status  
+- Add notifications/reminders for upcoming deadlines  
+- Persist data using a real backend or Firebase  
+
+---
+
+## 👩🏽‍💻 Author
+
+**Susan Wanjiru**
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
