@@ -1,68 +1,96 @@
+// App.jsx
 import React, { useEffect, useState } from "react";
 import GoalForm from "./components/GoalForm";
-import GoalsList from "./components/GoalsList";
+import GoalCard from "./components/GoalCard";
+import './App.css';
 
-const BASE_URL = "https://smart-goals-backend-2.onrender.com";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 function App() {
   const [goals, setGoals] = useState([]);
+  const [editingGoal, setEditingGoal] = useState(null);
 
   useEffect(() => {
-    fetch(`${BASE_URL}/goals`)
+    fetch(`${API_URL}/goals`)
       .then((res) => res.json())
-      .then(setGoals);
+      .then(setGoals)
+      .catch(console.error);
   }, []);
 
-  const handleAddGoal = (newGoal) => {
-    setGoals((prevGoals) => [...prevGoals, newGoal]);
+  const addOrUpdateGoal = (goalData) => {
+    if (goalData.id) {
+      // UPDATE
+      fetch(`${API_URL}/goals/${goalData.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(goalData),
+      })
+        .then((res) => res.json())
+        .then((updated) => {
+          setGoals((prev) =>
+            prev.map((goal) => (goal.id === updated.id ? updated : goal))
+          );
+          setEditingGoal(null);
+        });
+    } else {
+      // CREATE
+      fetch(`${API_URL}/goals`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...goalData, savedAmount: 0 }),
+      })
+        .then((res) => res.json())
+        .then((newGoal) => setGoals((prev) => [...prev, newGoal]));
+    }
   };
 
-  const handleDeleteGoal = (id) => {
-    fetch(`${BASE_URL}/goals/${id}`, {
-      method: "DELETE",
-    }).then(() => {
-      setGoals((prevGoals) => prevGoals.filter((goal) => goal.id !== id));
+  const handleDelete = (id) => {
+    fetch(`${API_URL}/goals/${id}`, { method: "DELETE" }).then(() => {
+      setGoals((prev) => prev.filter((goal) => goal.id !== id));
     });
   };
 
-  const handleEditGoal = (updatedGoal) => {
-    setGoals((prevGoals) =>
-      prevGoals.map((goal) => (goal.id === updatedGoal.id ? updatedGoal : goal))
-    );
-  };
+  const handleDeposit = (id, amount) => {
+    const goal = goals.find((g) => g.id === id);
+    const updated = { ...goal, savedAmount: goal.savedAmount + amount };
 
-  const handleDeposit = (goalId, amount) => {
-    const goal = goals.find((g) => g.id === goalId);
-    const updatedGoal = {
-      ...goal,
-      savedAmount: Number(goal.savedAmount) + Number(amount),
-    };
-
-    fetch(`${BASE_URL}/goals/${goalId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedGoal),
+    fetch(`${API_URL}/goals/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updated),
     })
       .then((res) => res.json())
-      .then((data) => {
-        setGoals((prevGoals) =>
-          prevGoals.map((g) => (g.id === goalId ? data : g))
+      .then((updatedGoal) => {
+        setGoals((prev) =>
+          prev.map((goal) => (goal.id === id ? updatedGoal : goal))
         );
       });
   };
 
+  const handleEditClick = (goal) => setEditingGoal(goal);
+
+  const handleCancelEdit = () => setEditingGoal(null);
+
   return (
     <div className="App">
-      <h1>Smart Goal Planner</h1>
-      <GoalForm onAddGoal={handleAddGoal} />
-      <GoalsList
-        goals={goals}
-        onDeleteGoal={handleDeleteGoal}
-        onEditGoal={handleEditGoal}
-        onDeposit={handleDeposit}
+      <GoalForm
+        onSubmit={addOrUpdateGoal}
+        editingGoal={editingGoal}
+        onCancel={handleCancelEdit}
       />
+
+      <div className="goal-list">
+        {goals.map((goal) => (
+          <GoalCard
+            key={goal.id}
+            goal={goal}
+            onDelete={handleDelete}
+            onDeposit={handleDeposit}
+            onEditClick={handleEditClick}
+          />
+        ))}
+      </div>
     </div>
   );
 }

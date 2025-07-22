@@ -1,0 +1,99 @@
+/* Global styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: #fefaff;
+  color: #333;
+}
+
+/* Container for the app */
+.app-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Goal card styling */
+.goal-card {
+  background: #ffffffd4;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: transform 0.2s ease;
+}
+
+.goal-card:hover {
+  transform: translateY(-2px);
+}
+
+.goal-card h3 {
+  margin-top: 0;
+  color: #5b5f97;
+}
+
+/* Progress bar */
+.progress-bar {
+  background-color: #e0e0e0;
+  height: 10px;
+  border-radius: 5px;
+  margin: 10px 0;
+  overflow: hidden;
+}
+
+.progress-bar .fill {
+  background-color: #90e0ef;
+  height: 100%;
+  transition: width 0.4s ease-in-out;
+}
+
+/* Deposit form */
+.deposit-form {
+  display: flex;
+  gap: 10px;
+  margin: 1rem 0;
+}
+
+.deposit-form input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  flex: 1;
+  font-size: 14px;
+}
+
+.deposit-form button {
+  background-color: #5b5f97;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.deposit-form button:hover {
+  background-color: #4a4e85;
+}
+
+/* Button styles */
+.goal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 1rem;
+}
+
+.goal-actions button {
+  background-color: #ffc8dd;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.goal-actions button:hover {
+  background-color: #ffafcc;
+}

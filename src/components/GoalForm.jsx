@@ -1,45 +1,48 @@
-import { useState } from "react";
+// components/GoalForm.jsx
+import React, { useState, useEffect } from "react";
 
-function GoalForm({ onAddGoal }) {
+function GoalForm({ onSubmit, editingGoal, onCancel }) {
   const [formData, setFormData] = useState({
     name: "",
-    targetAmount: "",
-    savedAmount: "",
     category: "",
     deadline: "",
-    createdAt: new Date().toISOString().split("T")[0], // today
+    targetAmount: "",
   });
 
-  function handleChange(e) {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    fetch("https://smart-goals-backend-2.onrender.com/goals", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    })
-      .then((r) => r.json())
-      .then((newGoal) => {
-        onAddGoal(newGoal);
-        setFormData({
-          name: "",
-          targetAmount: "",
-          savedAmount: "",
-          category: "",
-          deadline: "",
-          createdAt: new Date().toISOString().split("T")[0],
-        });
+  useEffect(() => {
+    if (editingGoal) {
+      setFormData({
+        name: editingGoal.name || "",
+        category: editingGoal.category || "",
+        deadline: editingGoal.deadline || "",
+        targetAmount: editingGoal.targetAmount || "",
       });
-  }
+    }
+  }, [editingGoal]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const updatedGoal = {
+      ...editingGoal,
+      ...formData,
+      targetAmount: parseFloat(formData.targetAmount),
+    };
+    onSubmit(updatedGoal);
+    setFormData({ name: "", category: "", deadline: "", targetAmount: "" });
+  };
 
   return (
     <form onSubmit={handleSubmit} className="goal-form">
+      <h2>{editingGoal ? "Edit Goal" : "Add New Goal"}</h2>
       <input
-        type="text"
         name="name"
         placeholder="Goal Name"
         value={formData.name}
@@ -47,23 +50,6 @@ function GoalForm({ onAddGoal }) {
         required
       />
       <input
-        type="number"
-        name="targetAmount"
-        placeholder="Target Amount"
-        value={formData.targetAmount}
-        onChange={handleChange}
-        required
-      />
-      <input
-        type="number"
-        name="savedAmount"
-        placeholder="Saved Amount"
-        value={formData.savedAmount}
-        onChange={handleChange}
-        required
-      />
-      <input
-        type="text"
         name="category"
         placeholder="Category"
         value={formData.category}
@@ -77,7 +63,20 @@ function GoalForm({ onAddGoal }) {
         onChange={handleChange}
         required
       />
-      <button type="submit">Add Goal</button>
+      <input
+        type="number"
+        name="targetAmount"
+        placeholder="Target Amount"
+        value={formData.targetAmount}
+        onChange={handleChange}
+        required
+      />
+      <button type="submit">{editingGoal ? "Update Goal" : "Add Goal"}</button>
+      {editingGoal && (
+        <button type="button" onClick={onCancel}>
+          Cancel
+        </button>
+      )}
     </form>
   );
 }
